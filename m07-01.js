@@ -8,20 +8,26 @@ let throw_error_405 = (res, homepath) => {
 }
 
 let send_response = (res, status, options, viewpath) => {
+    index = fs.readFileSync(viewpath)
     res.writeHead(status, options)
-    res.end(data)
+    res.write(index, () => res.end())
 }
 
 
 RequestHandler = (req, res, homepath) => {
     let parsed_url = url.parse(req.url, true)
-    let pathname = parsed_url.pathname
-    
+    let pathname = parsed_url.pathname    
 
     // json
     if (req.method == 'GET') {
-        if (pathname == '/json') {
-            send_response(res, 200, { 'Content-Type':'application/jspn' }, homepath + '/index.json')            
+        if (pathname == '/json') {        
+            json = JSON.parse(fs.readFileSync(homepath + '/index.json'))
+            res.writeHead(200, { 'Content-Type':'application/json' })
+            res.write(JSON.stringify(json), () => 
+            {
+                console.log(`json: ${JSON.stringify(json)}; ${typeof JSON.stringify(json)}`)
+                res.end()
+            })
         }
         // js
         if (pathname == '/js') {
@@ -30,6 +36,9 @@ RequestHandler = (req, res, homepath) => {
         // html
         else if (pathname == '/html') {
             send_response(res, 200, { 'Content-Type':'text/html; charset=utf-8' }, homepath + '/index.html')
+        }
+        else if (pathname == '/test') {
+            send_response(res, 200, { 'Content-Type':'text/html; charset=utf-8' }, './test.html')
         }
         // css
         else if (pathname == '/css') {

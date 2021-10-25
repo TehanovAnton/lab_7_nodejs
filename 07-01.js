@@ -5,4 +5,4 @@ let homepath = './static'
 server = http.createServer((req, res) => {
     RequestHandler(req, res, homepath)
 })
-server.listen(5000, () => console.log('Server running => http://localhost:5000'))
+server.listen(3000, () => console.log('Server running => http://localhost:3000'))
